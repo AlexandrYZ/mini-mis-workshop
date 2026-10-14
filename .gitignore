@@ -1,0 +1,5 @@
+# Настройки OpenCode с ключами — никогда не коммитим
+opencode.json
+opencode.jsonc
+node_modules/
+.DS_Store

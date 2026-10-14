@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Мини-МИС</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand"><span class="logo">✚</span> Мини-МИС <small>поликлиника № 1</small></div>
+    <div class="badge">Учебный проект · только синтетические данные</div>
+  </header>
+  <div class="layout">
+    <nav class="tabs" id="tabs" aria-label="Модули"></nav>
+    <main class="panel" id="panel"></main>
+  </div>
+  <script type="module">
+    // Модули Мини-МИС. Вкладка оживает, когда появляется src/<id>.ui.js с export mount(container).
+    const MODULES = [
+      { id: 'home-visit', title: 'Вызов врача на дом' },
+      { id: 'bmi', title: 'Индекс массы тела', bonus: true },
+      { id: 'reminders', title: 'Напоминания о приёме', bonus: true },
+    ];
+
+    const tabs = document.getElementById('tabs');
+    const panel = document.getElementById('panel');
+    const loaded = {};
+
+    async function load(m) {
+      const url = `./src/${m.id}.ui.js`;
+      const head = await fetch(url, { method: 'HEAD', cache: 'no-store' });
+      if (!head.ok) return { state: 'missing' };
+      try {
+        return { state: 'ready', mod: await import(`${url}?t=${Date.now()}`) };
+      } catch (e) {
+        return { state: 'error', error: e };
+      }
+    }
+
+    function show(m) {
+      for (const b of tabs.children) b.setAttribute('aria-selected', b.dataset.id === m.id);
+      const r = loaded[m.id];
+      panel.replaceChildren();
+      const h = document.createElement('h1');
+      h.textContent = m.title;
+      panel.append(h);
+      if (r.state === 'ready') {
+        const box = document.createElement('div');
+        panel.append(box);
+        r.mod.mount(box);
+      } else if (r.state === 'error') {
+        panel.insertAdjacentHTML('beforeend', `<div class="stub error"><b>Модуль есть, но не загрузился.</b><pre></pre>Откройте консоль браузера (F12) или покажите эту ошибку агенту.</div>`);
+        panel.querySelector('pre').textContent = String(r.error);
+      } else {
+        panel.insertAdjacentHTML('beforeend', `<div class="stub"><b>Модуль ещё не реализован.</b><br>Вкладка оживёт, когда появится файл <code>src/${m.id}.ui.js</code>${m.bonus ? '<br><span class="tag">бонус</span>' : ''}</div>`);
+      }
+      location.hash = m.id;
+    }
+
+    for (const m of MODULES) {
+      loaded[m.id] = await load(m);
+      const b = document.createElement('button');
+      b.dataset.id = m.id;
+      b.className = `tab ${loaded[m.id].state}`;
+      b.innerHTML = `<span class="dot"></span>${m.title}`;
+      b.onclick = () => show(m);
+      tabs.append(b);
+    }
+    show(MODULES.find((m) => m.id === location.hash.slice(1)) ?? MODULES[0]);
+  </script>
+</body>
+</html>

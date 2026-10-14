@@ -1,0 +1,13 @@
+{
+  "name": "mini-mis-workshop",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20.19" },
+  "scripts": {
+    "start": "node scripts/serve.js",
+    "test": "node --test",
+    "test:tz": "node --test test/timezone.test.js",
+    "doctor": "node scripts/doctor.js",
+    "catchup": "node scripts/catchup.js"
+  }
+}

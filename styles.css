@@ -1,0 +1,53 @@
+:root {
+  --bg: #f4f6f8; --surface: #fff; --text: #1d2733; --muted: #6b7785; --line: #dde3ea;
+  --accent: #0f7b7a; --accent-soft: #e2f3f2; --ok: #1f8a4c; --ok-soft: #e6f5ec;
+  --danger: #c0392b; --danger-soft: #fbeae8; --on-accent: #fff;
+  color-scheme: light dark;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #12171c; --surface: #1b2228; --text: #e6ebf0; --muted: #94a0ad; --line: #2c353e;
+    --accent: #3cc2bf; --accent-soft: #173534; --ok: #4cc27f; --ok-soft: #173525;
+    --danger: #ef6b5d; --danger-soft: #3a1d1a; --on-accent: #08201f;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); }
+.top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 12px 20px; background: var(--surface); border-bottom: 1px solid var(--line); }
+.brand { font-weight: 700; font-size: 18px; }
+.brand small { font-weight: 400; color: var(--muted); margin-left: 6px; }
+.logo { color: var(--accent); }
+.badge { font-size: 12px; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; }
+.layout { display: grid; grid-template-columns: 240px 1fr; gap: 20px; padding: 20px; max-width: 1100px; margin: 0 auto; }
+@media (max-width: 700px) { .layout { grid-template-columns: 1fr; padding: 16px; } }
+.tabs { display: flex; flex-direction: column; gap: 6px; }
+.tab { display: flex; align-items: center; gap: 10px; text-align: left; font: inherit; color: var(--text);
+  background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; cursor: pointer; }
+.tab[aria-selected="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.tab.missing { color: var(--muted); }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line); flex: none; }
+.tab.ready .dot { background: var(--ok); }
+.tab.error .dot { background: var(--danger); }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px 24px; min-height: 360px; }
+.panel h1 { margin: 0 0 16px; font-size: 22px; }
+.stub { color: var(--muted); border: 1px dashed var(--line); border-radius: 10px; padding: 24px; line-height: 1.6; }
+.stub.error { color: var(--danger); border-color: var(--danger); }
+.stub pre { white-space: pre-wrap; }
+.tag { font-size: 12px; background: var(--accent-soft); color: var(--accent); border-radius: 6px; padding: 2px 8px; }
+code { background: var(--bg); padding: 1px 5px; border-radius: 4px; }
+
+/* Общие элементы форм для модулей */
+.form { display: grid; gap: 14px; max-width: 520px; }
+.form label { display: grid; gap: 6px; font-weight: 600; font-size: 14px; }
+.form input, .form select { font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px;
+  background: var(--bg); color: var(--text); }
+.form fieldset { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; display: grid; gap: 6px; }
+.form fieldset label { display: flex; gap: 8px; font-weight: 400; }
+.form button { font: inherit; font-weight: 600; padding: 10px 14px; border: 0; border-radius: 8px;
+  background: var(--accent); color: var(--on-accent); cursor: pointer; justify-self: start; }
+.result { margin-top: 18px; border-radius: 10px; padding: 14px 16px; max-width: 520px; line-height: 1.5; }
+.result.ok { background: var(--ok-soft); border: 1px solid var(--ok); }
+.result.danger { background: var(--danger-soft); border: 1px solid var(--danger); }
+.result.invalid { background: var(--bg); border: 1px solid var(--line); }

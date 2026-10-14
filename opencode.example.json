@@ -1,0 +1,12 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "deepseek/<модель>",
+  "provider": {
+    "deepseek": { "options": { "apiKey": "<учебный ключ>" } },
+    "zai": { "options": { "apiKey": "<учебный ключ>" } }
+  },
+  "permission": {
+    "edit": "allow",
+    "bash": { "*": "allow", "git push*": "ask", "rm *": "ask" }
+  }
+}

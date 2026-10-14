@@ -3,8 +3,9 @@ export const RED_FLAGS = ['боль в груди', 'потеря сознани
 export const COMPLAINTS = ['температура', 'кашель', 'боль в горле', 'слабость', 'головная боль', ...RED_FLAGS];
 
 const CUTOFF_HOUR = 14;
-const pad = (n) => String(n).padStart(2, '0');
-const toDateString = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+// ponytail: фиксированный UTC+5 — Сургут (Asia/Yekaterinburg) без летнего времени с 2014; для нескольких регионов — Intl.DateTimeFormat с timeZone
+export const CLINIC_UTC_OFFSET = '+05:00';
+const OFFSET_MS = 5 * 60 * 60 * 1000;
 
 export function createHomeVisit({ patientName, district, requestedAt, complaints = [] }) {
   const errors = [];
@@ -17,7 +18,8 @@ export function createHomeVisit({ patientName, district, requestedAt, complaints
     return { status: 'refused', message: 'Вызовите скорую помощь: 103' };
   }
 
-  const visit = new Date(requestedAt);
-  if (requestedAt.getHours() >= CUTOFF_HOUR) visit.setDate(visit.getDate() + 1);
-  return { status: 'registered', district, visitDate: toDateString(visit) };
+  // «Часы» UTC сдвинутой даты = местное время поликлиники, независимо от пояса сервера
+  const local = new Date(requestedAt.getTime() + OFFSET_MS);
+  if (local.getUTCHours() >= CUTOFF_HOUR) local.setUTCDate(local.getUTCDate() + 1);
+  return { status: 'registered', district, visitDate: local.toISOString().slice(0, 10) };
 }
